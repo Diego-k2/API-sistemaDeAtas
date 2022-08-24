@@ -31,8 +31,7 @@ public class FuncionarioModel {
     private String matricula;
 
     @ManyToOne
-    @JoinTable
-    @Column(nullable = false, length = 100)
+    @JoinColumn(name = "setor_id", nullable = false)
     private SetorModel setor;
 
     public FuncionarioModel(){}
