@@ -15,4 +15,7 @@ public interface FuncionarioRepository extends JpaRepository<FuncionarioModel, U
     boolean existsByEmail(String email);
 
     boolean existsByMatricula(String matricula);
+
+    void deleteByCpf(String cpf);
+
 }

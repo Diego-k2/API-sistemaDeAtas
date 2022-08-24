@@ -40,4 +40,9 @@ public class FuncionarioService {
         return funcionarioRepository.existsByMatricula(matricula);
     }
 
+    @Transactional
+    public void deleteByCpf(String cpf){
+        funcionarioRepository.deleteByCpf(cpf);
+    }
+
 }
