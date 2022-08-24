@@ -1,5 +1,7 @@
 package br.com.ApiSistemaDeAtas.dto;
 
+import br.com.ApiSistemaDeAtas.model.SetorModel;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 

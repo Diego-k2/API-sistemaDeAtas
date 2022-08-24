@@ -11,7 +11,7 @@ public class SetorModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 70)
     private String nomeSetor;
 
     public SetorModel(){}

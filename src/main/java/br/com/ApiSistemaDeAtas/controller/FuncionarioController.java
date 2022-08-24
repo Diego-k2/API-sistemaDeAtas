@@ -2,7 +2,9 @@ package br.com.ApiSistemaDeAtas.controller;
 
 import br.com.ApiSistemaDeAtas.dto.FuncionarioDto;
 import br.com.ApiSistemaDeAtas.model.FuncionarioModel;
+import br.com.ApiSistemaDeAtas.model.SetorModel;
 import br.com.ApiSistemaDeAtas.service.FuncionarioService;
+import br.com.ApiSistemaDeAtas.service.SetorService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +17,12 @@ import javax.validation.Valid;
 public class FuncionarioController {
 
     final FuncionarioService funcionarioService;
-    public FuncionarioController(FuncionarioService funcionarioService) {
+    final SetorService setorService;
+    public FuncionarioController(FuncionarioService funcionarioService, SetorService setorService) {
         this.funcionarioService = funcionarioService;
+        this.setorService = setorService;
     }
+
 
 
     @PostMapping
@@ -35,12 +40,24 @@ public class FuncionarioController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("CONFLITO: Matricula já cadastrado");
         }
 
+        if(!setorService.existsByNomeSetor(funcionarioDto.getSetor().toUpperCase())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("NÃO ACHAMOS: Setor não existe");
+        }
+
+        SetorModel setorModel = setorService.findByNomeSetor(funcionarioDto.getSetor().toUpperCase()).get();
         FuncionarioModel funcionarioModel = new FuncionarioModel();
         String formatCpf = funcionarioDto.getCpf().replaceAll("[^0-9]+" ,"");
         funcionarioDto.setCpf(formatCpf);
         BeanUtils.copyProperties(funcionarioDto, funcionarioModel);
+        funcionarioModel.setSetor(setorModel);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioService.saveFuncionario(funcionarioModel));
     }
+
+    @GetMapping
+    public ResponseEntity<Object> getAllFuncionarios(){
+        return ResponseEntity.status(HttpStatus.OK).body(funcionarioService.findAll());
+    }
+
 
 }

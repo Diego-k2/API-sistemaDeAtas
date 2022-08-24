@@ -5,6 +5,8 @@ import br.com.ApiSistemaDeAtas.repository.FuncionarioRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class FuncionarioService {
 
@@ -16,6 +18,11 @@ public class FuncionarioService {
     @Transactional
     public FuncionarioModel saveFuncionario(FuncionarioModel funcionario){
         return funcionarioRepository.save(funcionario);
+    }
+
+    @Transactional
+    public List<FuncionarioModel> findAll(){
+        return funcionarioRepository.findAll();
     }
 
     @Transactional
