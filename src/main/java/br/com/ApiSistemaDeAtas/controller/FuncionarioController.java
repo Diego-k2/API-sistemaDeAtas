@@ -5,6 +5,7 @@ import br.com.ApiSistemaDeAtas.model.FuncionarioModel;
 import br.com.ApiSistemaDeAtas.model.SetorModel;
 import br.com.ApiSistemaDeAtas.service.FuncionarioService;
 import br.com.ApiSistemaDeAtas.service.SetorService;
+import br.com.ApiSistemaDeAtas.util.VerificadorCpf;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +29,12 @@ public class FuncionarioController {
     @PostMapping
     public ResponseEntity<Object> saveFuncionario(@RequestBody @Valid FuncionarioDto funcionarioDto){
 
-        if(funcionarioService.existsByCpf(funcionarioDto.getCpf())){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("CONFLITO: CPF já cadastrado");
+        String formatCpf = funcionarioDto.getCpf().replaceAll("[^0-9]+" ,"");
+        funcionarioDto.setCpf(formatCpf);
+
+        if(funcionarioService.existsByCpf(funcionarioDto.getCpf()) ||
+                !VerificadorCpf.isCpfValid(funcionarioDto.getCpf())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("CONFLITO: CPF já cadastrado ou CPF em formato incorreto");
         }
 
         if(funcionarioService.existsByEmail(funcionarioDto.getEmail())){
@@ -46,8 +51,6 @@ public class FuncionarioController {
 
         SetorModel setorModel = setorService.findByNomeSetor(funcionarioDto.getSetor().toUpperCase()).get();
         FuncionarioModel funcionarioModel = new FuncionarioModel();
-        String formatCpf = funcionarioDto.getCpf().replaceAll("[^0-9]+" ,"");
-        funcionarioDto.setCpf(formatCpf);
         BeanUtils.copyProperties(funcionarioDto, funcionarioModel);
         funcionarioModel.setSetor(setorModel);
 
