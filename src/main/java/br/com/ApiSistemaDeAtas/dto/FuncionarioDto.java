@@ -20,20 +20,16 @@ public class FuncionarioDto {
     private String senha;
 
     @NotBlank
-    private String matricula;
-
-    @NotBlank
     private String setor;
 
     public FuncionarioDto(){}
 
-    public FuncionarioDto(String nome, String sobrenome, String cpf, String email, String senha, String matricula, String setor) {
+    public FuncionarioDto(String nome, String sobrenome, String cpf, String email, String senha, String setor) {
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.cpf = cpf;
         this.email = email;
         this.senha = senha;
-        this.matricula = matricula;
         this.setor = setor;
     }
 
@@ -75,14 +71,6 @@ public class FuncionarioDto {
 
     public void setSenha(String senha) {
         this.senha = senha;
-    }
-
-    public String getMatricula() {
-        return matricula;
-    }
-
-    public void setMatricula(String matricula) {
-        this.matricula = matricula;
     }
 
     public String getSetor() {

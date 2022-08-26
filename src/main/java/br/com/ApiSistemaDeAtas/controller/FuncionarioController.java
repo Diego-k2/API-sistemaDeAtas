@@ -5,6 +5,7 @@ import br.com.ApiSistemaDeAtas.model.FuncionarioModel;
 import br.com.ApiSistemaDeAtas.model.SetorModel;
 import br.com.ApiSistemaDeAtas.service.FuncionarioService;
 import br.com.ApiSistemaDeAtas.service.SetorService;
+import br.com.ApiSistemaDeAtas.util.GeradorMatricula;
 import br.com.ApiSistemaDeAtas.util.VerificadorCpf;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -19,9 +20,11 @@ public class FuncionarioController {
 
     final FuncionarioService funcionarioService;
     final SetorService setorService;
-    public FuncionarioController(FuncionarioService funcionarioService, SetorService setorService) {
+    final GeradorMatricula geradorMatricula;
+    public FuncionarioController(FuncionarioService funcionarioService, SetorService setorService, GeradorMatricula geradorMatricula) {
         this.funcionarioService = funcionarioService;
         this.setorService = setorService;
+        this.geradorMatricula = geradorMatricula;
     }
 
 
@@ -41,10 +44,6 @@ public class FuncionarioController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("CONFLITO: Email já cadastrado");
         }
 
-        if(funcionarioService.existsByMatricula(funcionarioDto.getMatricula())){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("CONFLITO: Matricula já cadastrado");
-        }
-
         if(!setorService.existsByNomeSetor(funcionarioDto.getSetor().toUpperCase())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("NÃO ACHAMOS: Setor não existe");
         }
@@ -53,6 +52,7 @@ public class FuncionarioController {
         FuncionarioModel funcionarioModel = new FuncionarioModel();
         BeanUtils.copyProperties(funcionarioDto, funcionarioModel);
         funcionarioModel.setSetor(setorModel);
+        funcionarioModel.setMatricula(geradorMatricula.setMatriculaAleatoria());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioService.saveFuncionario(funcionarioModel));
     }
@@ -65,7 +65,7 @@ public class FuncionarioController {
     @DeleteMapping("/{cpf}")
     public ResponseEntity<Object> deleteById(@PathVariable String cpf){
 
-        if(funcionarioService.existsByCpf(cpf)){
+        if(!funcionarioService.existsByCpf(cpf)){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("ERROR: CPF não existe em nossa base de dados");
         }
 
