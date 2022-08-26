@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FuncionarioService {
@@ -18,6 +19,11 @@ public class FuncionarioService {
     @Transactional
     public FuncionarioModel saveFuncionario(FuncionarioModel funcionario){
         return funcionarioRepository.save(funcionario);
+    }
+
+    @Transactional
+    public  Optional<FuncionarioModel> findByCpf(String cpf) {
+        return funcionarioRepository.findByCpf(cpf);
     }
 
     @Transactional

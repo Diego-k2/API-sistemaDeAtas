@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -73,12 +74,25 @@ public class FuncionarioController {
         return ResponseEntity.status(HttpStatus.OK).body("FUNCIONARIO DELETADO");
     }
 
-//    @PutMapping("/{cpf}")
-//    public ResponseEntity<Object> update(@PathVariable String cpf){
-//
-//
-//
-//    }
+    @PutMapping("/{cpf}")
+    public ResponseEntity<Object> update(@PathVariable String cpf, @RequestBody @Valid FuncionarioDto funcionarioDto){
+        Optional<FuncionarioModel> optionalFuncionarioModel = funcionarioService.findByCpf(cpf);
+        if(!optionalFuncionarioModel.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ERROR: CPF não existe em nossa base de dados");
+        }
+
+        FuncionarioModel funcionarioModel = optionalFuncionarioModel.get();
+
+        funcionarioModel.setNome(funcionarioDto.getNome());
+        funcionarioModel.setSobrenome(funcionarioDto.getSobrenome());
+        funcionarioModel.setSetor(setorService.findByNomeSetor(funcionarioDto.getSetor()).get());
+        funcionarioModel.setCpf(funcionarioDto.getCpf());
+        funcionarioModel.setEmail(funcionarioDto.getEmail());
+        funcionarioModel.setSenha(funcionarioDto.getSenha());
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(funcionarioService.saveFuncionario(funcionarioModel));
+    }
 
 
 }

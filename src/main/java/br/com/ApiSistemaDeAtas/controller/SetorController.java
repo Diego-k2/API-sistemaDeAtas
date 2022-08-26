@@ -38,5 +38,4 @@ public class SetorController {
     public ResponseEntity<Object> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(setorService.findAll());
     }
-
 }

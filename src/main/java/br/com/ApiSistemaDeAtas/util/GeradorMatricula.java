@@ -1,7 +1,6 @@
 package br.com.ApiSistemaDeAtas.util;
 
 import br.com.ApiSistemaDeAtas.service.FuncionarioService;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
