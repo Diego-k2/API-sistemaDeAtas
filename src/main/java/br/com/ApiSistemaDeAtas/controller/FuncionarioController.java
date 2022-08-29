@@ -63,6 +63,17 @@ public class FuncionarioController {
         return ResponseEntity.status(HttpStatus.OK).body(funcionarioService.findAll());
     }
 
+    @GetMapping(value = "/{cpf}")
+    public ResponseEntity<Object> getFuncionarioByCpf(@PathVariable String cpf){
+
+        if(!funcionarioService.existsByCpf(cpf)){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CPF não existe em nossa base de dados");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(funcionarioService.findByCpf(cpf));
+    }
+
+
     @DeleteMapping("/{cpf}")
     public ResponseEntity<Object> deleteById(@PathVariable String cpf){
 
