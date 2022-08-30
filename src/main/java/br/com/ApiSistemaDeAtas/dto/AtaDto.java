@@ -21,6 +21,8 @@ public class AtaDto {
     @NotBlank
     private String emissor;
 
+    private boolean isPublica = false;
+
     private List<ParticipanteParser> participanteParsers;
 
     public String getHoraInicio() {
@@ -60,6 +62,22 @@ public class AtaDto {
     }
 
     public void setParticipantes(List<ParticipanteParser> participanteParsers) {
+        this.participanteParsers = participanteParsers;
+    }
+
+    public boolean isPublica() {
+        return isPublica;
+    }
+
+    public void setPublica(boolean publica) {
+        isPublica = publica;
+    }
+
+    public List<ParticipanteParser> getParticipanteParsers() {
+        return participanteParsers;
+    }
+
+    public void setParticipanteParsers(List<ParticipanteParser> participanteParsers) {
         this.participanteParsers = participanteParsers;
     }
 }

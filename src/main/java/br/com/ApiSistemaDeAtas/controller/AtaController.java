@@ -1,6 +1,7 @@
 package br.com.ApiSistemaDeAtas.controller;
 
 import br.com.ApiSistemaDeAtas.dto.AtaDto;
+import br.com.ApiSistemaDeAtas.enuns.EstadoAta;
 import br.com.ApiSistemaDeAtas.model.AtaModel;
 import br.com.ApiSistemaDeAtas.model.FuncionarioModel;
 import br.com.ApiSistemaDeAtas.service.AtaService;
@@ -8,6 +9,7 @@ import br.com.ApiSistemaDeAtas.service.FuncionarioService;
 import br.com.ApiSistemaDeAtas.util.EmiteData;
 import br.com.ApiSistemaDeAtas.util.ParticipanteParser;
 import org.springframework.beans.BeanUtils;
+import org.springframework.boot.env.RandomValuePropertySourceEnvironmentPostProcessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/ata")
 public class AtaController {
 
     final AtaService ataService;
@@ -27,7 +30,7 @@ public class AtaController {
         this.funcionarioService = funcionarioService;
     }
 
-    @PostMapping(value = "/ata")
+    @PostMapping
     public ResponseEntity<Object> setAta(@RequestBody @Valid AtaDto ataDto) throws ParseException {
 
         if(!funcionarioService.existsByCpf(ataDto.getEmissor())){
@@ -56,5 +59,20 @@ public class AtaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ataService.save(ataModel));
     }
 
+
+    @GetMapping("/{cpf}")
+    public ResponseEntity<Object> getAtaByEmissorAndEmEdicao(@PathVariable String cpf){
+
+        if(!funcionarioService.existsByCpf(cpf)){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Funcionario não consta em nossa base de dados");
+        }
+
+        FuncionarioModel emissor = funcionarioService.findByCpf(cpf).get();
+        if(!ataService.existsByEmissorAndEmEdicao(emissor, String.valueOf(EstadoAta.EM_EDICAO))){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Este emissor não tem nenhuma ATA no estado: EM_EMISSAO");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(ataService.findByEmissorAndAndEstado(emissor));
+    }
 
 }

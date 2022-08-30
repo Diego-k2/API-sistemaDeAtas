@@ -1,5 +1,7 @@
 package br.com.ApiSistemaDeAtas.model;
 
+import br.com.ApiSistemaDeAtas.enuns.EstadoAta;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +32,7 @@ public class AtaModel {
 
     private boolean isPublica = false;
 
-    private String estado = "EM EDIÇÃO";
+    private String estado = String.valueOf(EstadoAta.EM_EDICAO);
 
     @ManyToOne
     @JoinColumn(name = "emissor_id", nullable = false)
