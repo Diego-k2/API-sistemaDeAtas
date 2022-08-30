@@ -14,13 +14,13 @@ public class AtaModel {
     private UUID id;
 
     @Column(nullable = false)
-    private Date data;
+    private String data;
 
     @Column(nullable = false)
-    private Date horaInicio;
+    private String horaInicio;
 
     @Column(nullable = false)
-    private Date horaFim;
+    private String horaFim;
 
     @Column(nullable = false, length = 100)
     private String titulo;
@@ -50,27 +50,27 @@ public class AtaModel {
         this.id = id;
     }
 
-    public Date getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(Date data) {
+    public void setData(String data) {
         this.data = data;
     }
 
-    public Date getHoraInicio() {
+    public String getHoraInicio() {
         return horaInicio;
     }
 
-    public void setHoraInicio(Date horaInicio) {
+    public void setHoraInicio(String horaInicio) {
         this.horaInicio = horaInicio;
     }
 
-    public Date getHoraFim() {
+    public String getHoraFim() {
         return horaFim;
     }
 
-    public void setHoraFim(Date horaFim) {
+    public void setHoraFim(String horaFim) {
         this.horaFim = horaFim;
     }
 

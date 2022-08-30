@@ -5,17 +5,16 @@ import br.com.ApiSistemaDeAtas.model.AtaModel;
 import br.com.ApiSistemaDeAtas.model.FuncionarioModel;
 import br.com.ApiSistemaDeAtas.service.AtaService;
 import br.com.ApiSistemaDeAtas.service.FuncionarioService;
+import br.com.ApiSistemaDeAtas.util.EmiteData;
+import br.com.ApiSistemaDeAtas.util.ParticipanteParser;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -31,33 +30,28 @@ public class AtaController {
     @PostMapping(value = "/ata")
     public ResponseEntity<Object> setAta(@RequestBody @Valid AtaDto ataDto) throws ParseException {
 
-        for (String f: ataDto.getParticipantes()) {
-            if(!funcionarioService.existsByCpf(f)){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro participante" );
+        if(!funcionarioService.existsByCpf(ataDto.getEmissor())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ERROR: Não achamos o emissor em nossa base de dados");
+        }
+
+        for(ParticipanteParser participanteParser : ataDto.getParticipantes()){
+            if(!funcionarioService.existsByCpf(participanteParser.getCpf())){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ERRO PARTICIPANTE: '" + participanteParser.getCpf() + "', Não inscrito em nossa base de dados" );
             }
         }
 
-        if(!funcionarioService.existsByCpf(ataDto.getEmissor())){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ERRO EMISSOR");
-        }
-
         AtaModel ataModel = new AtaModel();
+        BeanUtils.copyProperties(ataDto, ataModel);
         List<FuncionarioModel> funcionarioModels = new ArrayList<>();
-        Date horaInicio = new SimpleDateFormat("HH:mm:ss").parse(ataDto.getHoraInicio());
 
-        ataModel.setHoraInicio(horaInicio);
-        ataModel.setEmissor(funcionarioService.findByCpf(ataDto.getEmissor()).get());
-        ataModel.setPautas(ataDto.getPautas());
-        ataModel.setTitulo(ataDto.getTitulo());
-
-        for (String f: ataDto.getParticipantes()) {
-            FuncionarioModel addFuncionario = funcionarioService.findByCpf(f).get();
-            funcionarioModels.add(addFuncionario);
+        for (ParticipanteParser participante: ataDto.getParticipantes()) {
+            funcionarioModels.add(funcionarioService.findByCpf(participante.getCpf()).get());
         }
 
+        ataModel.setEmissor(funcionarioService.findByCpf(ataDto.getEmissor()).get());
         ataModel.setParticipantes(funcionarioModels);
-        ataModel.setHoraFim( new Date("HH:mm:ss"));
-        ataModel.setData(new Date("yyyy/MM/dd"));
+        ataModel.setHoraFim(EmiteData.getHoraFinal());
+        ataModel.setData(EmiteData.getYearMothDay());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ataService.save(ataModel));
     }

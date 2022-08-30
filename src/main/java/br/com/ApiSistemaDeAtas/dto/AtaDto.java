@@ -1,5 +1,8 @@
 package br.com.ApiSistemaDeAtas.dto;
 
+
+import br.com.ApiSistemaDeAtas.util.ParticipanteParser;
+
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -18,8 +21,7 @@ public class AtaDto {
     @NotBlank
     private String emissor;
 
-    @NotBlank
-    private List<String> participantes;
+    private List<ParticipanteParser> participanteParsers;
 
     public String getHoraInicio() {
         return horaInicio;
@@ -53,11 +55,11 @@ public class AtaDto {
         this.emissor = emissor;
     }
 
-    public List<String> getParticipantes() {
-        return participantes;
+    public List<ParticipanteParser> getParticipantes() {
+        return participanteParsers;
     }
 
-    public void setParticipantes(List<String> participantes) {
-        this.participantes = participantes;
+    public void setParticipantes(List<ParticipanteParser> participanteParsers) {
+        this.participanteParsers = participanteParsers;
     }
 }
