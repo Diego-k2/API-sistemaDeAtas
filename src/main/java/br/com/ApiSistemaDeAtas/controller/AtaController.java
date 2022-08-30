@@ -59,6 +59,10 @@ public class AtaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ataService.save(ataModel));
     }
 
+    @GetMapping
+    public ResponseEntity<Object> getAllAtas(){
+        return ResponseEntity.status(HttpStatus.OK).body(ataService.findAll());
+    }
 
     @GetMapping("/{cpf}")
     public ResponseEntity<Object> getAtaByEmissorAndEmEdicao(@PathVariable String cpf){

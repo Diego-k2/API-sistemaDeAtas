@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,6 +30,11 @@ public class AtaService{
     @Transactional
     public void deleteById(String id){
         ataRepository.deleteById(UUID.fromString(id));
+    }
+
+    @Transactional
+    public List<AtaModel> findAll(){
+        return ataRepository.findAll();
     }
 
     @Transactional
