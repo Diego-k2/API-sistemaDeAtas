@@ -55,6 +55,7 @@ public class AtaController {
         ataModel.setParticipantes(funcionarioModels);
         ataModel.setHoraFim(EmiteData.getHoraFinal());
         ataModel.setData(EmiteData.getYearMothDay());
+        ataModel.setPublica(ataDto.getIsPublica());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ataService.save(ataModel));
     }
@@ -77,6 +78,11 @@ public class AtaController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(ataService.findByEmissorAndAndEstado(emissor));
+    }
+
+    @GetMapping("/funcionario")
+    public ResponseEntity<Object> getAllPublica(){
+        return ResponseEntity.status(HttpStatus.OK).body(ataService.findAllByIsPublica());
     }
 
 }

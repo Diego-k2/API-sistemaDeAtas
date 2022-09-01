@@ -30,7 +30,8 @@ public class AtaModel {
     @Column(nullable = false, length = 10000)
     private String pautas;
 
-    private boolean isPublica = false;
+    @Column(nullable = false)
+    private String isPublica;
 
     private String estado = String.valueOf(EstadoAta.EM_EDICAO);
 
@@ -92,11 +93,11 @@ public class AtaModel {
         this.pautas = pautas;
     }
 
-    public boolean isPublica() {
+    public String isPublica() {
         return isPublica;
     }
 
-    public void setPublica(boolean publica) {
+    public void setPublica(String publica) {
         isPublica = publica;
     }
 

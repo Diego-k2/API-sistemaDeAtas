@@ -21,7 +21,8 @@ public class AtaDto {
     @NotBlank
     private String emissor;
 
-    private boolean isPublica = false;
+    @NotBlank
+    private String isPublica;
 
     private List<ParticipanteParser> participanteParsers;
 
@@ -65,12 +66,12 @@ public class AtaDto {
         this.participanteParsers = participanteParsers;
     }
 
-    public boolean isPublica() {
+    public String getIsPublica() {
         return isPublica;
     }
 
-    public void setPublica(boolean publica) {
-        isPublica = publica;
+    public void setIsPublica(String isPublica) {
+        this.isPublica = isPublica;
     }
 
     public List<ParticipanteParser> getParticipanteParsers() {

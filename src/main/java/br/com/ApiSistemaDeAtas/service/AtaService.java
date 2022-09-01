@@ -47,4 +47,8 @@ public class AtaService{
         return ataRepository.existsByEmissorAndAndEstado(emissor, estado);
     }
 
+    @Transactional
+    public List<Optional<AtaModel>> findAllByIsPublica(){
+        return ataRepository.findAllByIsPublica("true");
+    }
 }
