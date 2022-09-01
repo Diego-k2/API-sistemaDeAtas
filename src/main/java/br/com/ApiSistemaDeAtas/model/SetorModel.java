@@ -14,6 +14,9 @@ public class SetorModel {
     @Column(nullable = false, unique = true, length = 70)
     private String nomeSetor;
 
+    @Column(nullable = false, unique = true)
+    private String numeroSetor;
+
     public SetorModel(){}
 
     public SetorModel(String nomeSetor) {
@@ -34,5 +37,13 @@ public class SetorModel {
 
     public void setNomeSetor(String nomeSetor) {
         this.nomeSetor = nomeSetor;
+    }
+
+    public String getNumeroSetor() {
+        return numeroSetor;
+    }
+
+    public void setNumeroSetor(String numeroSetor) {
+        this.numeroSetor = numeroSetor;
     }
 }

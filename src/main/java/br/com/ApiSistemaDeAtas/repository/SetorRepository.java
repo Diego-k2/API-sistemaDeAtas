@@ -14,4 +14,9 @@ public interface SetorRepository extends JpaRepository<SetorModel, UUID> {
 
     boolean existsByNomeSetor(String nome);
 
+    boolean existsByNumeroSetor(String numero);
+
+    Optional<SetorModel> findByNumeroSetor(String numero);
+
+    void deleteByNumeroSetor(String numeroSetor);
 }
