@@ -54,7 +54,14 @@ public class AtaService{
         return ataRepository.findAllByParticipantes(partipante);
     }
 
+    @Transactional
     public boolean existsByNumeroAta(String numeroAta){
         return ataRepository.existsByNumeroAta(numeroAta);
     }
+
+    @Transactional
+    public void deleteByNumeroAta(String numero){
+        ataRepository.deleteByNumeroAta(numero);
+    }
+
 }

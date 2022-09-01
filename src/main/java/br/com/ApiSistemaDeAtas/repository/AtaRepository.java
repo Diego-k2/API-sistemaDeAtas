@@ -23,4 +23,6 @@ public interface AtaRepository extends JpaRepository<AtaModel, UUID> {
 
     boolean existsByNumeroAta(String numeroAta);
 
+    void deleteByNumeroAta(String numero);
+
 }

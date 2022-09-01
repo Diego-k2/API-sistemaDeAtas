@@ -107,6 +107,14 @@ public class AtaController {
         return ResponseEntity.status(HttpStatus.OK).body(ataComParticipante);
     }
 
+    @DeleteMapping(value = "/{numeroAta}")
+    public ResponseEntity<Object> deleteAtaByNumero(@PathVariable String numeroAta){
+        if(!ataService.existsByNumeroAta(numeroAta)){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ATA não existe em nossa base de dados");
+        }
+        ataService.deleteByNumeroAta(numeroAta);
+        return ResponseEntity.status(HttpStatus.OK).body("ATA nº: " + numeroAta + ", foi deletada da nossa base de dados");
+    }
 
 
 }
