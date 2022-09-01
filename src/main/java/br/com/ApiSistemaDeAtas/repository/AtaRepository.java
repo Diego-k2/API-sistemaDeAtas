@@ -18,4 +18,9 @@ public interface AtaRepository extends JpaRepository<AtaModel, UUID> {
     boolean existsByEmissorAndAndEstado(FuncionarioModel emissor, String estado);
 
     List<Optional<AtaModel>> findAllByIsPublica(String isPublica);
+
+    List<Optional<AtaModel>> findAllByParticipantes(FuncionarioModel partipante);
+
+    boolean existsByNumeroAta(String numeroAta);
+
 }

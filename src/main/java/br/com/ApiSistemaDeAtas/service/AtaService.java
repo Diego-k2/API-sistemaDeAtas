@@ -4,8 +4,6 @@ import br.com.ApiSistemaDeAtas.enuns.EstadoAta;
 import br.com.ApiSistemaDeAtas.model.AtaModel;
 import br.com.ApiSistemaDeAtas.model.FuncionarioModel;
 import br.com.ApiSistemaDeAtas.repository.AtaRepository;
-import br.com.ApiSistemaDeAtas.util.EmiteData;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,9 +44,17 @@ public class AtaService{
     public boolean existsByEmissorAndEmEdicao(FuncionarioModel emissor, String estado){
         return ataRepository.existsByEmissorAndAndEstado(emissor, estado);
     }
-
     @Transactional
     public List<Optional<AtaModel>> findAllByIsPublica(){
         return ataRepository.findAllByIsPublica("true");
+    }
+
+    @Transactional
+    public List<Optional<AtaModel>> findAllByParticipantes(FuncionarioModel partipante){
+        return ataRepository.findAllByParticipantes(partipante);
+    }
+
+    public boolean existsByNumeroAta(String numeroAta){
+        return ataRepository.existsByNumeroAta(numeroAta);
     }
 }

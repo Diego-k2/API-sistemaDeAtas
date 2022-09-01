@@ -7,9 +7,9 @@ import br.com.ApiSistemaDeAtas.model.FuncionarioModel;
 import br.com.ApiSistemaDeAtas.service.AtaService;
 import br.com.ApiSistemaDeAtas.service.FuncionarioService;
 import br.com.ApiSistemaDeAtas.util.EmiteData;
+import br.com.ApiSistemaDeAtas.util.GeradorNumeroAta;
 import br.com.ApiSistemaDeAtas.util.ParticipanteParser;
 import org.springframework.beans.BeanUtils;
-import org.springframework.boot.env.RandomValuePropertySourceEnvironmentPostProcessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +18,7 @@ import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/ata")
@@ -25,9 +26,11 @@ public class AtaController {
 
     final AtaService ataService;
     final FuncionarioService funcionarioService;
-    public AtaController(AtaService ataService, FuncionarioService funcionarioService) {
+    final GeradorNumeroAta geradorNumeroAta;
+    public AtaController(AtaService ataService, FuncionarioService funcionarioService, GeradorNumeroAta geradorNumeroAta) {
         this.ataService = ataService;
         this.funcionarioService = funcionarioService;
+        this.geradorNumeroAta = geradorNumeroAta;
     }
 
     @PostMapping
@@ -56,6 +59,7 @@ public class AtaController {
         ataModel.setHoraFim(EmiteData.getHoraFinal());
         ataModel.setData(EmiteData.getYearMothDay());
         ataModel.setPublica(ataDto.getIsPublica());
+        ataModel.setNumeroAta(geradorNumeroAta.geraNumeroAta());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ataService.save(ataModel));
     }
@@ -80,9 +84,29 @@ public class AtaController {
         return ResponseEntity.status(HttpStatus.OK).body(ataService.findByEmissorAndAndEstado(emissor));
     }
 
-    @GetMapping("/funcionario")
+    @GetMapping("/publica")
     public ResponseEntity<Object> getAllPublica(){
         return ResponseEntity.status(HttpStatus.OK).body(ataService.findAllByIsPublica());
     }
+
+    @GetMapping(value = "/participante/{cpf}")
+    public ResponseEntity<Object> getAllByParticipante(@PathVariable String cpf){
+
+        if(!funcionarioService.existsByCpf(cpf)){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CPF não consta em nossa base de dados");
+        }
+
+        FuncionarioModel participante = funcionarioService.findByCpf(cpf).get();
+
+        List<Optional<AtaModel>> ataComParticipante = ataService.findAllByParticipantes(participante);
+
+        if(ataComParticipante.isEmpty()){
+            return ResponseEntity.status(HttpStatus.OK).body("Participante não consta em nossa base de dados");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(ataComParticipante);
+    }
+
+
 
 }

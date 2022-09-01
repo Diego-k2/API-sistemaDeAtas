@@ -3,7 +3,6 @@ package br.com.ApiSistemaDeAtas.model;
 import br.com.ApiSistemaDeAtas.enuns.EstadoAta;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +31,9 @@ public class AtaModel {
 
     @Column(nullable = false)
     private String isPublica;
+
+    @Column(nullable = false, unique = true)
+    private String numeroAta;
 
     private String estado = String.valueOf(EstadoAta.EM_EDICAO);
 
@@ -123,5 +125,21 @@ public class AtaModel {
 
     public void setParticipantes(List<FuncionarioModel> participantes) {
         this.participantes = participantes;
+    }
+
+    public String getIsPublica() {
+        return isPublica;
+    }
+
+    public void setIsPublica(String isPublica) {
+        this.isPublica = isPublica;
+    }
+
+    public String getNumeroAta() {
+        return numeroAta;
+    }
+
+    public void setNumeroAta(String numeroAta) {
+        this.numeroAta = numeroAta;
     }
 }
