@@ -33,9 +33,6 @@ public class FuncionarioController {
     @PostMapping
     public ResponseEntity<Object> saveFuncionario(@RequestBody @Valid FuncionarioDto funcionarioDto){
 
-        String formatCpf = funcionarioDto.getCpf().replaceAll("[^0-9]+" ,"");
-        funcionarioDto.setCpf(formatCpf);
-
         if(funcionarioService.existsByCpf(funcionarioDto.getCpf()) ||
                 !VerificadorCpf.isCpfValid(funcionarioDto.getCpf())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("CONFLITO: CPF já cadastrado ou CPF em formato incorreto");

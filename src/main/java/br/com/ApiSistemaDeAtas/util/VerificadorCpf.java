@@ -4,8 +4,10 @@ public class VerificadorCpf {
 
     public static boolean isCpfValid(String cpf){
 
-        if(cpf.length() == 11){
-            if(cpf.equals(verificaDigitos(cpf))){
+        String formatCpf = cpf.replaceAll("[^0-9]+" ,"");
+
+        if(formatCpf.length() == 11){
+            if(cpf.equals(verificaDigitos(formatCpf))){
                 return true;
             }
             return false;

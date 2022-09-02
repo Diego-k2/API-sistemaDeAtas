@@ -36,7 +36,7 @@ public class AtaController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> setAta(@RequestBody @Valid AtaDto ataDto) throws ParseException {
+    public ResponseEntity<Object> setAta(@RequestBody @Valid AtaDto ataDto) {
 
         if(!funcionarioService.existsByCpf(ataDto.getEmissor())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ERROR: Não achamos o emissor em nossa base de dados");
