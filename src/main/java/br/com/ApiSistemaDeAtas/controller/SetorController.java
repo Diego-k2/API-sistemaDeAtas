@@ -55,9 +55,9 @@ public class SetorController {
     }
 
     @DeleteMapping("/{numeroSetor}")
-    public ResponseEntity<Object> deleteSetor(@PathVariable String numeroSetor){
+    public ResponseEntity<Object> deleteSetor(@PathVariable String numeroSetor) {
 
-        if(!setorService.existsByNumeroSetor(numeroSetor)){
+        if (!setorService.existsByNumeroSetor(numeroSetor)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Setor não pertence a nossa base de dados");
         }
 

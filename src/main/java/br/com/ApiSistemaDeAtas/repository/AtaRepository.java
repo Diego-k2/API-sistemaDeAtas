@@ -17,12 +17,14 @@ public interface AtaRepository extends JpaRepository<AtaModel, UUID> {
 
     boolean existsByEmissorAndAndEstado(FuncionarioModel emissor, String estado);
 
-    List<Optional<AtaModel>> findAllByIsPublica(String isPublica);
+    List<Optional<AtaModel>> findAllByIsPublicaAndEstado(String isPublica, String estado);
 
-    List<Optional<AtaModel>> findAllByParticipantes(FuncionarioModel partipante);
+    List<Optional<AtaModel>> findAllByParticipantesAndEstado(FuncionarioModel partipante, String estado);
 
     boolean existsByNumeroAta(String numeroAta);
 
     void deleteByNumeroAta(String numero);
+
+    AtaModel findByNumeroAta(String numeroAta);
 
 }

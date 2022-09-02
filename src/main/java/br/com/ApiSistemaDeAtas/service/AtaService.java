@@ -44,14 +44,15 @@ public class AtaService{
     public boolean existsByEmissorAndEmEdicao(FuncionarioModel emissor, String estado){
         return ataRepository.existsByEmissorAndAndEstado(emissor, estado);
     }
+
     @Transactional
     public List<Optional<AtaModel>> findAllByIsPublica(){
-        return ataRepository.findAllByIsPublica("true");
+        return ataRepository.findAllByIsPublicaAndEstado("true", String.valueOf(EstadoAta.POSTADA));
     }
 
     @Transactional
     public List<Optional<AtaModel>> findAllByParticipantes(FuncionarioModel partipante){
-        return ataRepository.findAllByParticipantes(partipante);
+        return ataRepository.findAllByParticipantesAndEstado(partipante, String.valueOf(EstadoAta.POSTADA));
     }
 
     @Transactional
@@ -63,5 +64,11 @@ public class AtaService{
     public void deleteByNumeroAta(String numero){
         ataRepository.deleteByNumeroAta(numero);
     }
+
+    @Transactional
+    public AtaModel findByNumeroAta(String numeroAta){
+        return ataRepository.findByNumeroAta(numeroAta);
+    }
+
 
 }

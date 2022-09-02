@@ -9,9 +9,11 @@ import br.com.ApiSistemaDeAtas.service.FuncionarioService;
 import br.com.ApiSistemaDeAtas.util.EmiteData;
 import br.com.ApiSistemaDeAtas.util.GeradorNumeroAta;
 import br.com.ApiSistemaDeAtas.util.ParticipanteParser;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.ReactiveTransaction;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -115,6 +117,54 @@ public class AtaController {
         ataService.deleteByNumeroAta(numeroAta);
         return ResponseEntity.status(HttpStatus.OK).body("ATA nº: " + numeroAta + ", foi deletada da nossa base de dados");
     }
+
+    @PutMapping("/update/{numeroAta}")
+    public ResponseEntity<Object> updateAta(@RequestBody @Valid AtaDto ataDto, @PathVariable String numeroAta){
+
+        if(!ataService.existsByNumeroAta(numeroAta)){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ATA não existe em nossa base de dados");
+        }
+
+        AtaModel ataModel = ataService.findByNumeroAta(numeroAta);
+
+        if(ataModel.getEstado().equals(String.valueOf(EstadoAta.POSTADA))){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("ATA não pode ser editada, pois já foi publicada");
+        }
+
+        List<FuncionarioModel> participantes = new ArrayList<>();
+        for (ParticipanteParser participanteParser: ataDto.getParticipantes()) {
+            if(!funcionarioService.existsByCpf(participanteParser.getCpf())){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CPF não consta em nossa base de dados");
+            }
+            participantes.add(funcionarioService.findByCpf(participanteParser.getCpf()).get());
+
+        }
+
+        ataModel.setPublica(ataDto.getIsPublica());
+        ataModel.setTitulo(ataDto.getTitulo());
+        ataModel.setPautas(ataDto.getPautas());
+        ataModel.setParticipantes(participantes);
+        ataModel.setEstado(String.valueOf(EstadoAta.EDITADA));
+
+        return ResponseEntity.status(HttpStatus.OK).body(ataService.save(ataModel));
+    }
+
+    @PutMapping("/post/{numeroAta}")
+    public ResponseEntity<Object> postaAta(@PathVariable String numeroAta){
+
+        if(!ataService.existsByNumeroAta(numeroAta)){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ATA não consta em nosso sistema");
+        }
+
+        AtaModel ataModel = ataService.findByNumeroAta(numeroAta);
+
+        ataModel.setEstado(String.valueOf(EstadoAta.POSTADA));
+        ataService.save(ataModel);
+
+        return ResponseEntity.status(HttpStatus.OK).body("ATA Nº: " + numeroAta + ", foi postada");
+    }
+
+
 
 
 }
