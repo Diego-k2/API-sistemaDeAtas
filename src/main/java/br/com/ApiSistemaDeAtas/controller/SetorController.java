@@ -7,6 +7,7 @@ import br.com.ApiSistemaDeAtas.util.GeradorNumeroSetor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,6 +25,7 @@ public class SetorController {
 
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> saveSetor(@RequestBody @Valid SetorDto setor){
 
         if(setorService.existsByNomeSetor(setor.getNomeSetor().toUpperCase())){
@@ -38,11 +40,13 @@ public class SetorController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(setorService.findAll());
     }
 
     @PutMapping("/{numeroSetor}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> editSetor(@RequestBody @Valid SetorDto setorDto, @PathVariable String numeroSetor){
         if(!setorService.existsByNumeroSetor(numeroSetor)){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Setor não existem em nossa base de dados");
@@ -55,6 +59,7 @@ public class SetorController {
     }
 
     @DeleteMapping("/{numeroSetor}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> deleteSetor(@PathVariable String numeroSetor) {
 
         if (!setorService.existsByNumeroSetor(numeroSetor)) {

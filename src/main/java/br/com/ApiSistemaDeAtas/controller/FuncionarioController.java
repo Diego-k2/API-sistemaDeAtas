@@ -3,7 +3,6 @@ package br.com.ApiSistemaDeAtas.controller;
 import br.com.ApiSistemaDeAtas.dto.FuncionarioDto;
 import br.com.ApiSistemaDeAtas.model.FuncionarioModel;
 import br.com.ApiSistemaDeAtas.model.SetorModel;
-import br.com.ApiSistemaDeAtas.model.UserModel;
 import br.com.ApiSistemaDeAtas.securityConfig.WebSecurityConfig;
 import br.com.ApiSistemaDeAtas.service.FuncionarioService;
 import br.com.ApiSistemaDeAtas.service.SetorService;
@@ -13,6 +12,7 @@ import br.com.ApiSistemaDeAtas.util.VerificadorCpf;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,6 +36,7 @@ public class FuncionarioController {
 
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> saveFuncionario(@RequestBody @Valid FuncionarioDto funcionarioDto, @PathVariable String role){
 
         if(funcionarioService.existsByCpf(funcionarioDto.getCpf()) ||
@@ -61,11 +62,13 @@ public class FuncionarioController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> getAllFuncionarios(){
         return ResponseEntity.status(HttpStatus.OK).body(funcionarioService.findAll());
     }
 
     @GetMapping(value = "/{cpf}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> getFuncionarioByCpf(@PathVariable String cpf){
 
         if(!funcionarioService.existsByCpf(cpf)){
@@ -77,6 +80,7 @@ public class FuncionarioController {
 
 
     @DeleteMapping("/{cpf}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> deleteById(@PathVariable String cpf){
 
         if(!funcionarioService.existsByCpf(cpf)){
@@ -88,6 +92,7 @@ public class FuncionarioController {
     }
 
     @PutMapping("/{cpf}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> update(@PathVariable String cpf, @RequestBody @Valid FuncionarioDto funcionarioDto){
         Optional<FuncionarioModel> optionalFuncionarioModel = funcionarioService.findByCpf(cpf);
         if(!optionalFuncionarioModel.isPresent()){

@@ -5,6 +5,7 @@ import br.com.ApiSistemaDeAtas.repository.RoleRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleService {
@@ -26,6 +27,8 @@ public class RoleService {
         return roleRepository.findAll();
     }
 
-
+    public Optional<RoleModel> findByRoleName(String roleName) {
+        return roleRepository.findByRoleName(roleName);
+    }
 
 }

@@ -8,6 +8,7 @@ import org.apache.catalina.mbeans.MBeanUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,6 +24,7 @@ public class RoleController {
 
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> saveRole(@RequestBody @Valid RoleDto roleDto){
 
         if(roleService.existsByRoleName(roleDto.getRoleName())){
@@ -35,6 +37,7 @@ public class RoleController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> findAll(){
         return ResponseEntity.status(HttpStatus.OK).body(roleService.getAll());
     }

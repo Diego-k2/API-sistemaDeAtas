@@ -9,15 +9,13 @@ import br.com.ApiSistemaDeAtas.service.FuncionarioService;
 import br.com.ApiSistemaDeAtas.util.EmiteData;
 import br.com.ApiSistemaDeAtas.util.GeradorNumeroAta;
 import br.com.ApiSistemaDeAtas.util.ParticipanteParser;
-import net.bytebuddy.asm.Advice;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.ReactiveTransaction;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +34,7 @@ public class AtaController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_FUNCIONARIO')")
     public ResponseEntity<Object> setAta(@RequestBody @Valid AtaDto ataDto) {
 
         if(!funcionarioService.existsByCpf(ataDto.getEmissor())){
@@ -67,11 +66,13 @@ public class AtaController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_FUNCIONARIO')")
     public ResponseEntity<Object> getAllAtas(){
         return ResponseEntity.status(HttpStatus.OK).body(ataService.findAll());
     }
 
     @GetMapping("/{cpf}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_FUNCIONARIO')")
     public ResponseEntity<Object> getAtaByEmissorAndEmEdicao(@PathVariable String cpf){
 
         if(!funcionarioService.existsByCpf(cpf)){
@@ -87,11 +88,13 @@ public class AtaController {
     }
 
     @GetMapping("/publica")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_FUNCIONARIO')")
     public ResponseEntity<Object> getAllPublica(){
         return ResponseEntity.status(HttpStatus.OK).body(ataService.findAllByIsPublica());
     }
 
     @GetMapping(value = "/participante/{cpf}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_FUNCIONARIO')")
     public ResponseEntity<Object> getAllByParticipante(@PathVariable String cpf){
 
         if(!funcionarioService.existsByCpf(cpf)){
@@ -110,6 +113,7 @@ public class AtaController {
     }
 
     @DeleteMapping(value = "/{numeroAta}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> deleteAtaByNumero(@PathVariable String numeroAta){
         if(!ataService.existsByNumeroAta(numeroAta)){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ATA não existe em nossa base de dados");
@@ -119,6 +123,7 @@ public class AtaController {
     }
 
     @PutMapping("/update/{numeroAta}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<Object> updateAta(@RequestBody @Valid AtaDto ataDto, @PathVariable String numeroAta){
 
         if(!ataService.existsByNumeroAta(numeroAta)){
@@ -150,6 +155,7 @@ public class AtaController {
     }
 
     @PutMapping("/post/{numeroAta}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<Object> postaAta(@PathVariable String numeroAta){
 
         if(!ataService.existsByNumeroAta(numeroAta)){
@@ -163,8 +169,5 @@ public class AtaController {
 
         return ResponseEntity.status(HttpStatus.OK).body("ATA Nº: " + numeroAta + ", foi postada");
     }
-
-
-
-
+    
 }

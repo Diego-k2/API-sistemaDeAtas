@@ -13,8 +13,7 @@ public class UserDto {
     @NotBlank
     private String password;
 
-    @NotBlank
-    private List<RoleModel> roles;
+    private List<RoleDto> roles;
 
     public String getEmail() {
         return email;
@@ -32,11 +31,11 @@ public class UserDto {
         this.password = password;
     }
 
-    public List<RoleModel> getRoles() {
+    public List<RoleDto> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<RoleModel> roles) {
+    public void setRoles(List<RoleDto> roles) {
         this.roles = roles;
     }
 }
