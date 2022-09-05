@@ -3,8 +3,11 @@ package br.com.ApiSistemaDeAtas.controller;
 import br.com.ApiSistemaDeAtas.dto.FuncionarioDto;
 import br.com.ApiSistemaDeAtas.model.FuncionarioModel;
 import br.com.ApiSistemaDeAtas.model.SetorModel;
+import br.com.ApiSistemaDeAtas.model.UserModel;
+import br.com.ApiSistemaDeAtas.securityConfig.WebSecurityConfig;
 import br.com.ApiSistemaDeAtas.service.FuncionarioService;
 import br.com.ApiSistemaDeAtas.service.SetorService;
+import br.com.ApiSistemaDeAtas.service.UserService;
 import br.com.ApiSistemaDeAtas.util.GeradorMatricula;
 import br.com.ApiSistemaDeAtas.util.VerificadorCpf;
 import org.springframework.beans.BeanUtils;
@@ -22,16 +25,18 @@ public class FuncionarioController {
     final FuncionarioService funcionarioService;
     final SetorService setorService;
     final GeradorMatricula geradorMatricula;
-    public FuncionarioController(FuncionarioService funcionarioService, SetorService setorService, GeradorMatricula geradorMatricula) {
+    final UserService userService;
+    public FuncionarioController(FuncionarioService funcionarioService, SetorService setorService, GeradorMatricula geradorMatricula, WebSecurityConfig webSecurityConfig, UserService userService) {
         this.funcionarioService = funcionarioService;
         this.setorService = setorService;
         this.geradorMatricula = geradorMatricula;
+        this.userService = userService;
     }
 
 
 
     @PostMapping
-    public ResponseEntity<Object> saveFuncionario(@RequestBody @Valid FuncionarioDto funcionarioDto){
+    public ResponseEntity<Object> saveFuncionario(@RequestBody @Valid FuncionarioDto funcionarioDto, @PathVariable String role){
 
         if(funcionarioService.existsByCpf(funcionarioDto.getCpf()) ||
                 !VerificadorCpf.isCpfValid(funcionarioDto.getCpf())){
